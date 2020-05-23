@@ -1,6 +1,7 @@
 const db = require("../database");
+const bcrypt = require("bcryptjs");
 
-const ClientModel = new db.Schema({
+const ClientSchema = new db.Schema({
   name: {
     type: String,
     required: true,
@@ -17,12 +18,24 @@ const ClientModel = new db.Schema({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Client = db.model("Client", ClientModel);
+ClientSchema.pre("save", async function (next) {
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
+
+  next();
+});
+
+const Client = db.model("Client", ClientSchema);
 
 module.exports = Client;

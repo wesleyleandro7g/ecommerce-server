@@ -1,6 +1,6 @@
 const db = require("../database");
 
-const ProductModel = new db.Schema({
+const ProductSchema = new db.Schema({
   name: {
     type: String,
     required: true,
@@ -30,10 +30,11 @@ const ProductModel = new db.Schema({
   },
   assignedToCompany: {
     type: db.Schema.Types.ObjectId,
+    ref: "Company",
     required: true,
   },
 });
 
-const Product = db.model("Product", ProductModel);
+const Product = db.model("Product", ProductSchema);
 
 module.exports = Product;
