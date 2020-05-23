@@ -17,6 +17,10 @@ const CompanySchema = new db.Schema({
     type: String,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Company = db.model("Company", CompanySchema);
