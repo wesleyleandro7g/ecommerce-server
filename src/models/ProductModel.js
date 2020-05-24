@@ -11,11 +11,11 @@ const ProductSchema = new db.Schema({
   },
   promotional_price: {
     type: String,
-    required: true,
+    required: false,
   },
   promotion_enabled: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
   promotion_start_date: {
