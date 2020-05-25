@@ -1,40 +1,40 @@
 const db = require("../database");
 
-const ProductSchema = new db.Schema({
-  name: {
+const ProdutoSchema = new db.Schema({
+  nome: {
     type: String,
     required: true,
   },
-  price: {
+  preco: {
     type: String,
     required: true,
   },
-  promotional_price: {
+  preco_promocional: {
     type: String,
     required: false,
   },
-  promotion_enabled: {
+  preco_promocional_ativo: {
     type: Boolean,
     required: false,
     default: false,
   },
-  promotion_start_date: {
+  data_inicio_promocao: {
     type: Date,
   },
-  promotion_end_date: {
+  data_fim_promocao: {
     type: Date,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  assignedToCompany: {
+  id_empresa: {
     type: db.Schema.Types.ObjectId,
     ref: "Company",
     required: true,
   },
+  data_cadastro: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Product = db.model("Product", ProductSchema);
+const Produto = db.model("Produto", ProdutoSchema);
 
-module.exports = Product;
+module.exports = Produto;

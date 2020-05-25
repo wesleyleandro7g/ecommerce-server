@@ -1,8 +1,8 @@
 const db = require("../database");
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new db.Schema({
-  name: {
+const UsuarioSchema = new db.Schema({
+  nome: {
     type: String,
     required: true,
   },
@@ -10,29 +10,29 @@ const UserSchema = new db.Schema({
     type: String,
     required: true,
   },
-  password: {
+  senha: {
     type: String,
     required: true,
     select: false,
   },
-  createdAt: {
+  data_cadastro: {
     type: Date,
     default: Date.now,
   },
-  assignedToCompany: {
+  id_empresa: {
     type: db.Schema.Types.ObjectId,
-    ref: "Company",
-    required: true,
+    ref: "Empresa",
+    required: false,
   },
 });
 
-UserSchema.pre("save", async function (next) {
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
+UsuarioSchema.pre("save", async function (next) {
+  const hash = await bcrypt.hash(this.senha, 10);
+  this.senha = hash;
 
   next();
 });
 
-const User = db.model("User", UserSchema);
+const Usuario = db.model("Usuario", UsuarioSchema);
 
-module.exports = User;
+module.exports = Usuario;

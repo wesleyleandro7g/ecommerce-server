@@ -1,16 +1,16 @@
-const Product = require("../models/ProductModel");
-const Company = require("../models/CompanyModel");
+const Product = require("../models/Produto");
+const Company = require("../models/Empresa");
 
 module.exports = {
   //### Cadastra um novo produto
   async create(req, res) {
     if (!(await Company.findById(req.params.companyId)))
-      return res.status(404).send({ error: "Company not found" });
+      return res.status(404).send({ error: "Empresa não encontrada" });
 
     try {
       const product = await Product.create({
         ...req.body,
-        assignedToCompany: req.params.companyId,
+        id_empresa: req.params.companyId,
       });
 
       return res.status(200).send({ product });
@@ -23,8 +23,10 @@ module.exports = {
   async list(req, res) {
     try {
       const products = await Product.find({
-        assignedToCompany: req.params.companyId,
+        id_empresa: req.params.companyId,
       });
+
+      if (!products) return res.status(404).send("Nenhum produto cadastrado");
 
       return res.status(200).send({ products });
     } catch (error) {
@@ -37,7 +39,8 @@ module.exports = {
     try {
       const product = await Product.findById(req.params.productId);
 
-      if (!product) return res.status(404).send({ error: "Product not found" });
+      if (!product)
+        return res.status(404).send({ error: "Produto não encontrado" });
 
       return res.status(200).send({ product });
     } catch (error) {
@@ -58,7 +61,8 @@ module.exports = {
         { new: true }
       );
 
-      if (!product) return res.status(404).send({ error: "Product not found" });
+      if (!product)
+        return res.status(404).send({ error: "Produto não encontrado" });
 
       return res.status(200).send({ product });
     } catch (error) {
@@ -71,7 +75,8 @@ module.exports = {
     try {
       const product = await Product.findByIdAndRemove(req.params.productId);
 
-      if (!product) return res.status(404).send({ error: "Product not found" });
+      if (!product)
+        return res.status(404).send({ error: "Produto não encontrado" });
 
       return res.status(200).send({ Deleted: "Ok" });
     } catch (error) {

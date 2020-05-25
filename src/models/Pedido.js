@@ -1,33 +1,33 @@
 const db = require("../database");
 
-const RequestSchema = new db.Schema({
-  value: {
+const PedidoSchema = new db.Schema({
+  valor_total: {
     type: String,
     required: true,
   },
-  products: [
+  produtos: [
     {
       type: db.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "Produto",
       required: true,
     },
   ],
-  assignedToCompany: {
+  id_empresa: {
     type: db.Schema.Types.ObjectId,
-    ref: "Company",
+    ref: "Empresa",
     required: true,
   },
-  assignedToClient: {
+  id_cliente: {
     type: db.Schema.Types.ObjectId,
-    ref: "Client",
+    ref: "Cliente",
     required: true,
   },
-  createdAt: {
+  data_pedido: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Request = db.model("Request", RequestSchema);
+const Pedido = db.model("Pedido", PedidoSchema);
 
-module.exports = Request;
+module.exports = Pedido;

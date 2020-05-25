@@ -1,12 +1,12 @@
 const db = require("../database");
 const bcrypt = require("bcryptjs");
 
-const ClientSchema = new db.Schema({
-  name: {
+const ClienteSchema = new db.Schema({
+  nome: {
     type: String,
     required: true,
   },
-  address: {
+  endereco: {
     type: String,
     required: true,
   },
@@ -14,28 +14,28 @@ const ClientSchema = new db.Schema({
     type: String,
     required: true,
   },
-  contact_phone: {
+  telefone_contato: {
     type: String,
     required: true,
   },
-  password: {
+  senha: {
     type: String,
     required: true,
     select: false,
   },
-  createdAt: {
+  data_cadastro: {
     type: Date,
     default: Date.now,
   },
 });
 
-ClientSchema.pre("save", async function (next) {
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
+ClienteSchema.pre("save", async function (next) {
+  const hash = await bcrypt.hash(this.senha, 10);
+  this.senha = hash;
 
   next();
 });
 
-const Client = db.model("Client", ClientSchema);
+const Cliente = db.model("Cliente", ClienteSchema);
 
-module.exports = Client;
+module.exports = Cliente;

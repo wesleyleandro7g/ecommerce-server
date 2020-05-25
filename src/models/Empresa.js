@@ -1,11 +1,11 @@
 const db = require("../database");
 
-const CompanySchema = new db.Schema({
-  name: {
+const EmpresaSchema = new db.Schema({
+  nome: {
     type: String,
     required: true,
   },
-  address: {
+  endereco: {
     type: String,
     required: true,
   },
@@ -13,16 +13,16 @@ const CompanySchema = new db.Schema({
     type: String,
     required: true,
   },
-  contact_phone: {
+  telefone_contato: {
     type: String,
     required: true,
   },
-  createdAt: {
+  data_cadastro: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Company = db.model("Company", CompanySchema);
+const Empresa = db.model("Empresa", EmpresaSchema);
 
-module.exports = Company;
+module.exports = Empresa;

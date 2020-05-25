@@ -1,13 +1,13 @@
-const Company = require("../models/CompanyModel");
+const Company = require("../models/Empresa");
 
 module.exports = {
   //### Cadastra uma nova empresa
   async create(req, res) {
-    const { name } = req.body;
+    const { nome } = req.body;
 
     try {
-      if (await Company.findOne({ name }))
-        return res.status(400).send({ error: "Company already exits" });
+      if (await Company.findOne({ nome }))
+        return res.status(400).send({ error: "Empresa já cadastrada" });
 
       const newcompany = await Company.create(req.body);
 
@@ -23,7 +23,7 @@ module.exports = {
       const companys = await Company.find();
 
       if (!companys)
-        return res.status(404).send({ error: "No registered companies" });
+        return res.status(404).send({ error: "Nenhuma empresa cadastrada" });
 
       return res.status(200).send({ companys });
     } catch (error) {
@@ -36,7 +36,8 @@ module.exports = {
     try {
       const company = await Company.findById(req.params.companyId);
 
-      if (!company) return res.status(404).send({ error: "Company not found" });
+      if (!company)
+        return res.status(404).send({ error: "Empresa não encontrada" });
 
       return res.status(200).send({ company });
     } catch (error) {
@@ -46,16 +47,16 @@ module.exports = {
 
   //### Altera os dados cadastrais de uma empresa
   async update(req, res) {
-    const { name, address, email, contact_phone } = req.body;
+    const { nome, endereco, email, telefone_contato } = req.body;
 
     try {
       const company = await Company.findByIdAndUpdate(
         req.params.companyId,
         {
-          name,
-          address,
+          nome,
+          endereco,
           email,
-          contact_phone,
+          telefone_contato,
         },
         { new: true }
       );
@@ -71,7 +72,8 @@ module.exports = {
     try {
       const company = await Company.findByIdAndRemove(req.params.companyId);
 
-      if (!company) return res.status(404).send({ error: "Company not found" });
+      if (!company)
+        return res.status(404).send({ error: "Empresa não encontrada" });
 
       return res.status(200).send({ Deleted: "Ok" });
     } catch (error) {
