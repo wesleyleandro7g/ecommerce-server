@@ -22,7 +22,7 @@ const UsuarioSchema = new db.Schema({
   id_empresa: {
     type: db.Schema.Types.ObjectId,
     ref: "Empresa",
-    required: false,
+    required: true,
   },
 });
 

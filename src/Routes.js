@@ -11,8 +11,8 @@ const ProductController = require("./controllers/ProductController");
 app.post("/authentication", AuthController.authenticate);
 
 //### Rotas para operações com usuários
-app.post("/user/register", UserController.create);
-app.get("/user", UserController.list);
+app.post("/:empresaId/user/register", UserController.create);
+app.get("/:empresaId/user", UserController.list);
 
 //### Rotas para operações com empresas
 app.post("/company", CompanyController.create);

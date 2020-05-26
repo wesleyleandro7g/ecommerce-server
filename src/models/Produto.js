@@ -26,7 +26,7 @@ const ProdutoSchema = new db.Schema({
   },
   id_empresa: {
     type: db.Schema.Types.ObjectId,
-    ref: "Company",
+    ref: "Empresa",
     required: true,
   },
   data_cadastro: {
