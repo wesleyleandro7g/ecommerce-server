@@ -39,4 +39,55 @@ module.exports = {
       return res.stauts(400).send({ error });
     }
   },
+
+  //### Exibe um usuário específico
+  async show(req, res) {
+    const _id = req.params.userId;
+
+    try {
+      const user = await User.findById({ _id });
+
+      return res.status(200).send({ user });
+    } catch (error) {
+      return res.status(400).send({ error });
+    }
+  },
+
+  //### ALtera informações de um usuário
+  async update(req, res) {
+    const _id = req.params.userId;
+
+    try {
+      const user = await User.findById({ _id });
+
+      if (!user)
+        return res.status(400).send({ error: "Usuário não encontrado" });
+
+      const updateUser = await User.findByIdAndUpdate(
+        _id,
+        {
+          ...req.body,
+        },
+        { new: true }
+      );
+
+      return res.status(200).send({ updateUser });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).send({ error });
+    }
+  },
+
+  //### Deleta um usuário
+  async delete(req, res) {
+    const { _id } = req.params;
+
+    try {
+      await User.findOneAndRemove({ _id });
+
+      return res.status(200).send({ error: "Usuário deletado" });
+    } catch (error) {
+      return res.stauts(400).send({ error });
+    }
+  },
 };

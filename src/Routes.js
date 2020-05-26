@@ -13,6 +13,8 @@ app.post("/authentication", AuthController.authenticate);
 //### Rotas para operações com usuários
 app.post("/:empresaId/user/register", UserController.create);
 app.get("/:empresaId/user", UserController.list);
+app.get("/user/:userId", UserController.show);
+app.put("/user/:userId", UserController.update);
 
 //### Rotas para operações com empresas
 app.post("/company", CompanyController.create);
