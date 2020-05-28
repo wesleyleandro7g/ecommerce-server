@@ -7,27 +7,38 @@ const UserController = require("./controllers/UserController");
 const CompanyController = require("./controllers/CompanyController");
 const ProductController = require("./controllers/ProductController");
 
-//### Rotas para autenticar usuários
-app.post("/authentication", AuthController.authenticate);
+const authMiddlewares = require("./middlewares/AuthenticateUsers");
 
+//### Rotas para autenticar usuários
+app.post("/:empresaId/authentication", AuthController.authenticate);
+
+//###_### Rotas que não precisam de autenticação
 //### Rotas para operações com empresas
-app.post("/company", CompanyController.create);
-app.get("/company", CompanyController.list);
-app.get("/company/:companyId", CompanyController.show);
-app.put("/company/:companyId", CompanyController.update);
-app.delete("/company/:companyId", CompanyController.delete);
+app.post("/empresa", CompanyController.create);
+app.get("/empresa", CompanyController.list);
+app.get("/empresa/:empresaId", CompanyController.show);
+
+//### Rotas para operações com produtos
+app.get("/:companyId/products/", ProductController.list);
+app.get("/:companyId/:productId", ProductController.show);
+
+//### Middleware de autenticação
+app.use(authMiddlewares);
+
+//###_### Rotas que precisam de autenticação
+//### Rotas para operações com empresas
+app.put("/empresa/:empresaId", CompanyController.update);
+app.delete("/empresa/:empresaId", CompanyController.delete);
 
 //### Rotas para operações com usuários
-app.post("/:empresaId/register", UserController.create);
-app.get("/:empresaId/user", UserController.list);
-app.get("/:empresaId/user/:userId", UserController.show);
-app.put("/:empresaId/user/:userId", UserController.update);
-app.delete("/:empresaId/user/:userId", UserController.delete);
+app.post("/:empresaId/user", UserController.create);
+app.get("/:empresaId/users", UserController.list);
+app.get("/:empresaId/:userId", UserController.show);
+app.put("/:empresaId/:userId", UserController.update);
+app.delete("/:empresaId/:userId", UserController.delete);
 
 //### Rotas para operações com produtos
 app.post("/:companyId/products/", ProductController.create);
-app.get("/:companyId/products/", ProductController.list);
-app.get("/:productId", ProductController.show);
 app.put("/:productId", ProductController.update);
 app.delete("/:productId", ProductController.delete);
 

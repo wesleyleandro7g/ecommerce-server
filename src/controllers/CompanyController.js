@@ -34,7 +34,7 @@ module.exports = {
   //### Lista os dados de uma empresa específica
   async show(req, res) {
     try {
-      const company = await Company.findById(req.params.companyId);
+      const company = await Company.findById(req.params.empresaId);
 
       if (!company)
         return res.status(404).send({ error: "Empresa não encontrada" });
@@ -51,7 +51,7 @@ module.exports = {
 
     try {
       const company = await Company.findByIdAndUpdate(
-        req.params.companyId,
+        req.params.empresaId,
         {
           nome,
           endereco,
@@ -70,7 +70,7 @@ module.exports = {
   //### Deleta uma empresa específica
   async delete(req, res) {
     try {
-      const company = await Company.findByIdAndRemove(req.params.companyId);
+      const company = await Company.findByIdAndRemove(req.params.empresaId);
 
       if (!company)
         return res.status(404).send({ error: "Empresa não encontrada" });

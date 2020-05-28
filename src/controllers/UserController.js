@@ -56,9 +56,10 @@ module.exports = {
   //### ALtera informações de um usuário
   async update(req, res) {
     const _id = req.params.userId;
+    const id_empresa = req.params.empresaId;
 
     try {
-      const user = await User.findById({ _id });
+      const user = await User.findOne({ _id, id_empresa });
 
       if (!user)
         return res.status(400).send({ error: "Usuário não encontrado" });
@@ -80,10 +81,13 @@ module.exports = {
 
   //### Deleta um usuário
   async delete(req, res) {
-    const { _id } = req.params;
+    const _id = req.params.userId;
+    const id_empresa = req.params.empresaId;
 
     try {
-      await User.findOneAndRemove({ _id });
+      const user = await User.findOneAndRemove({ _id, id_empresa });
+
+      if (!user) return res.send({ error: "Usuário não encontrado" });
 
       return res.status(200).send({ error: "Usuário deletado" });
     } catch (error) {
