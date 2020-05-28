@@ -6,11 +6,17 @@ const AuthController = require("./controllers/AuthController");
 const UserController = require("./controllers/UserController");
 const CompanyController = require("./controllers/CompanyController");
 const ProductController = require("./controllers/ProductController");
+const ClientController = require("./controllers/ClientController");
 
-const authMiddlewares = require("./middlewares/AuthenticateUsers");
+const userMiddlewares = require("./middlewares/AuthenticateUsers");
+const clientMiddleware = require("./middlewares/AuthenticateClients");
 
 //### Rotas para autenticar usuários
-app.post("/:empresaId/authentication", AuthController.authenticate);
+app.post("/empresa/:empresaId/authentication", AuthController.userAuthenticate);
+app.post(
+  "/cliente/:clientId/authentication",
+  AuthController.clientAuthenticate
+);
 
 //###_### Rotas que não precisam de autenticação
 //### Rotas para operações com empresas
@@ -19,11 +25,18 @@ app.get("/empresa", CompanyController.list);
 app.get("/empresa/:empresaId", CompanyController.show);
 
 //### Rotas para operações com produtos
-app.get("/:companyId/products/", ProductController.list);
-app.get("/:companyId/:productId", ProductController.show);
+app.get("/produtos/:companyId/products", ProductController.list);
+app.get("/produtos/:companyId/:productId", ProductController.show);
 
-//### Middleware de autenticação
-app.use(authMiddlewares);
+//### Middleware de autenticação de clientes
+app.use(clientMiddleware);
+
+//### Rotas para operações com clientes
+app.post("/cliente", ClientController.create);
+app.get("/cliente/:clientId", ClientController.show);
+
+//### Middleware de autenticação de usuários
+app.use(userMiddlewares);
 
 //###_### Rotas que precisam de autenticação
 //### Rotas para operações com empresas
@@ -31,15 +44,15 @@ app.put("/empresa/:empresaId", CompanyController.update);
 app.delete("/empresa/:empresaId", CompanyController.delete);
 
 //### Rotas para operações com usuários
-app.post("/:empresaId/user", UserController.create);
-app.get("/:empresaId/users", UserController.list);
-app.get("/:empresaId/:userId", UserController.show);
-app.put("/:empresaId/:userId", UserController.update);
-app.delete("/:empresaId/:userId", UserController.delete);
+app.post("/usuarios/:empresaId/user", UserController.create);
+app.get("/usuarios/:empresaId", UserController.list);
+app.get("/usuarios/:empresaId/:userId", UserController.show);
+app.put("/usuarios/:empresaId/:userId", UserController.update);
+app.delete("/usuarios/:empresaId/:userId", UserController.delete);
 
 //### Rotas para operações com produtos
-app.post("/:companyId/products/", ProductController.create);
-app.put("/:productId", ProductController.update);
-app.delete("/:productId", ProductController.delete);
+app.post("/produtos/:companyId", ProductController.create);
+app.put("/produtos/:companyId", ProductController.update);
+app.delete("/produtos/:companyId", ProductController.delete);
 
 module.exports = app;
