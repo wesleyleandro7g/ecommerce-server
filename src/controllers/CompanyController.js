@@ -84,7 +84,7 @@ module.exports = {
 
       await Company.findByIdAndRemove(req.params.empresaId);
 
-      return res.status(200).send({ Deleted: "Ok" });
+      return res.status(200).send({ Success: "Empresa deletada" });
     } catch (error) {
       return res.stauts(400).send({ error });
     }

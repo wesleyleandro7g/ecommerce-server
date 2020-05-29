@@ -89,7 +89,7 @@ module.exports = {
 
       if (!user) return res.send({ error: "Usuário não encontrado" });
 
-      return res.status(200).send({ error: "Usuário deletado" });
+      return res.status(200).send({ Success: "Usuário deletado" });
     } catch (error) {
       return res.stauts(400).send({ error });
     }

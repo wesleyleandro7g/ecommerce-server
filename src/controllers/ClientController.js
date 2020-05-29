@@ -13,6 +13,8 @@ module.exports = {
 
       const newclient = await Client.create(req.body);
 
+      newclient.senha = undefined;
+
       return res.status(200).send({ newclient });
     } catch (error) {
       console.log(error);
@@ -67,7 +69,7 @@ module.exports = {
 
       if (!client) return res.send({ error: "Cliente não encontrado" });
 
-      return res.status(200).send({ error: "Cliente deletado" });
+      return res.status(200).send({ Success: "Cliente deletado" });
     } catch (error) {
       return res.stauts(400).send({ error });
     }

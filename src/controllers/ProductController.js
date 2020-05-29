@@ -78,7 +78,7 @@ module.exports = {
       if (!product)
         return res.status(404).send({ error: "Produto não encontrado" });
 
-      return res.status(200).send({ Deleted: "Ok" });
+      return res.status(200).send({ Success: "Produto deletado" });
     } catch (error) {
       return res.status(400).send(error);
     }
