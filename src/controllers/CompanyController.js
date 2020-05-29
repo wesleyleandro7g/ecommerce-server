@@ -1,4 +1,5 @@
 const Company = require("../models/Empresa");
+const User = require("../models/Usuario");
 
 module.exports = {
   //### Cadastra uma nova empresa
@@ -69,11 +70,18 @@ module.exports = {
 
   //### Deleta uma empresa específica
   async delete(req, res) {
-    try {
-      const company = await Company.findByIdAndRemove(req.params.empresaId);
+    const id_empresa = req.params.empresaId;
 
-      if (!company)
-        return res.status(404).send({ error: "Empresa não encontrada" });
+    try {
+      const users = await User.find({ id_empresa });
+      console.log(users);
+
+      users.map(async (user) => {
+        const _id = user._id;
+        await User.findByIdAndRemove({ _id });
+      });
+
+      await Company.findByIdAndRemove(req.params.empresaId);
 
       return res.status(200).send({ Deleted: "Ok" });
     } catch (error) {

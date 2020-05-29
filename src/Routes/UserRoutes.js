@@ -3,7 +3,7 @@ const router = routes();
 
 const UserController = require("../controllers/UserController");
 
-router.post("/:empresaId/user", UserController.create);
+router.post("/:empresaId", UserController.create);
 router.get("/:empresaId", UserController.list);
 router.get("/:empresaId/:userId", UserController.show);
 router.put("/:empresaId/:userId", UserController.update);
