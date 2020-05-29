@@ -1,5 +1,6 @@
 const Company = require("../models/Empresa");
 const User = require("../models/Usuario");
+const Product = require("../models/Produto");
 
 module.exports = {
   //### Cadastra uma nova empresa
@@ -48,16 +49,11 @@ module.exports = {
 
   //### Altera os dados cadastrais de uma empresa
   async update(req, res) {
-    const { nome, endereco, email, telefone_contato } = req.body;
-
     try {
       const company = await Company.findByIdAndUpdate(
         req.params.empresaId,
         {
-          nome,
-          endereco,
-          email,
-          telefone_contato,
+          ...req.body,
         },
         { new: true }
       );
@@ -74,11 +70,16 @@ module.exports = {
 
     try {
       const users = await User.find({ id_empresa });
-      console.log(users);
+      const products = await Product.find({ id_empresa });
 
       users.map(async (user) => {
         const _id = user._id;
         await User.findByIdAndRemove({ _id });
+      });
+
+      products.map(async (product) => {
+        const _id = product._id;
+        await Product.findByIdAndRemove({ _id });
       });
 
       await Company.findByIdAndRemove(req.params.empresaId);
