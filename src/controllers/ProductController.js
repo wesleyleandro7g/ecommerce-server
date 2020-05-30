@@ -26,7 +26,10 @@ module.exports = {
         id_empresa: req.params.companyId,
       });
 
-      if (!products) return res.status(404).send("Nenhum produto cadastrado");
+      const count = products.length;
+
+      if (count === 0)
+        return res.status(404).send({ NOTFOUND: "Nenhum produto encontrado" });
 
       return res.status(200).send({ products });
     } catch (error) {

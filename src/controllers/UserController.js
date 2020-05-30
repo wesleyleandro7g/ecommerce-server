@@ -31,8 +31,10 @@ module.exports = {
     try {
       const users = await User.find({ id_empresa }).populate("Empresa");
 
-      if (!users)
-        return res.status(404).send({ error: "Usuário não encontrado" });
+      const count = users.length;
+
+      if (count === 0)
+        return res.status(404).send({ NOTFOUND: "Nenhum usuario encontrado" });
 
       return res.status(200).send({ users });
     } catch (error) {

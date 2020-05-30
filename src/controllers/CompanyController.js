@@ -24,8 +24,10 @@ module.exports = {
     try {
       const companys = await Company.find();
 
-      if (!companys)
-        return res.status(404).send({ error: "Nenhuma empresa cadastrada" });
+      const count = companys.length;
+
+      if (count === 0)
+        return res.status(404).send({ NOTFOUND: "Nenhuma empresa encontrada" });
 
       return res.status(200).send({ companys });
     } catch (error) {
