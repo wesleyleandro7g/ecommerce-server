@@ -13,9 +13,11 @@ module.exports = {
 
       const newcompany = await Company.create(req.body);
 
+      newcompany.senha = undefined;
+
       return res.status(200).send({ newcompany });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error });
     }
   },
 
@@ -53,7 +55,7 @@ module.exports = {
   async update(req, res) {
     try {
       const company = await Company.findByIdAndUpdate(
-        req.params.empresaId,
+        req.companyId,
         {
           ...req.body,
         },
@@ -68,7 +70,7 @@ module.exports = {
 
   //### Deleta uma empresa específica
   async delete(req, res) {
-    const id_empresa = req.params.empresaId;
+    const id_empresa = req.companyId;
 
     try {
       const users = await User.find({ id_empresa });
@@ -84,7 +86,7 @@ module.exports = {
         await Product.findByIdAndRemove({ _id });
       });
 
-      await Company.findByIdAndRemove(req.params.empresaId);
+      await Company.findByIdAndRemove(req.companyId);
 
       return res.status(200).send({ Success: "Empresa deletada" });
     } catch (error) {

@@ -3,11 +3,16 @@ const Request = require("../models/Pedido");
 module.exports = {
   //### Realiza um novo pedido
   async create(req, res) {
+    const id_empresa = req.params.empresaId;
+    const id_cliente = req.params.clienteId;
     try {
+      if (!id_empresa || !id_cliente)
+        return res.status(400).send({ error: "Informe a empresa e o cliente" });
+
       const newrequest = await Request.create({
         ...req.body,
-        id_empresa: req.params.empresaId,
-        id_cliente: req.params.clienteId,
+        id_empresa: id_empresa,
+        id_cliente: id_cliente,
       });
 
       return res.status(200).send({ newrequest });

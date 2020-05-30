@@ -4,7 +4,8 @@ const Company = require("../models/Empresa");
 module.exports = {
   //### Cadastra um novo usuário
   async create(req, res) {
-    const _id = req.params.empresaId;
+    const _id = req.companyId;
+
     const { email } = req.body;
 
     try {
@@ -26,7 +27,7 @@ module.exports = {
 
   //### Lista os usuários de uma empresa
   async list(req, res) {
-    const id_empresa = req.params.empresaId;
+    const id_empresa = req.companyId;
 
     try {
       const users = await User.find({ id_empresa }).populate("Empresa");
@@ -57,11 +58,10 @@ module.exports = {
 
   //### ALtera informações de um usuário
   async update(req, res) {
-    const _id = req.params.userId;
-    const id_empresa = req.params.empresaId;
+    const _id = req.userId;
 
     try {
-      const user = await User.findOne({ _id, id_empresa });
+      const user = await User.findOne({ _id });
 
       if (!user)
         return res.status(400).send({ error: "Usuário não encontrado" });
@@ -84,7 +84,7 @@ module.exports = {
   //### Deleta um usuário
   async delete(req, res) {
     const _id = req.params.userId;
-    const id_empresa = req.params.empresaId;
+    const id_empresa = req.companyId;
 
     try {
       const user = await User.findOneAndRemove({ _id, id_empresa });

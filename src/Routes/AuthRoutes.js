@@ -3,7 +3,8 @@ const router = routes();
 
 const AuthController = require("../controllers/AuthController");
 
-router.post("/:empresaId", AuthController.userAuthenticate);
-router.post("/:clientId", AuthController.clientAuthenticate);
+router.post("/empresa/:empresaId", AuthController.AdminAuthenticate);
+router.post("/usuario/:empresaId", AuthController.userAuthenticate);
+router.post("/cliente/:clientId", AuthController.clientAuthenticate);
 
 module.exports = router;
