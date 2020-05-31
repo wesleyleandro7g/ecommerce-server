@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
       return res.status(401).send({ error: "Token inválido" });
     }
 
-    req.companyId = decoded.payload;
+    req.companyId = decoded.payload.id;
 
     return next();
   });

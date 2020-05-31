@@ -24,7 +24,13 @@ module.exports = {
 
       company.senha = undefined;
 
-      const token = await jwt.sign(company.id, process.env.AUTH_COMPANY);
+      const payload = {
+        id: company.id,
+        nome: company.nome,
+        email: company.email,
+      };
+
+      const token = await jwt.sign(payload, process.env.AUTH_COMPANY, 8400);
 
       return res.status(200).send({ company, token: token });
     } catch (error) {
@@ -48,7 +54,7 @@ module.exports = {
 
       user.senha = undefined;
 
-      const token = await jwt.sign(user.id, process.env.AUTH_USER);
+      const token = await jwt.sign(user.id, process.env.AUTH_USER, 8400);
 
       return res.status(200).send({ user, token: token });
     } catch (error) {
@@ -71,7 +77,7 @@ module.exports = {
 
       client.senha = undefined;
 
-      const token = await jwt.sign(client.id, process.env.AUTH_CLIENT);
+      const token = await jwt.sign(client.id, process.env.AUTH_CLIENT, 8400);
 
       return res.status(200).send({ client, token: token });
     } catch (error) {
