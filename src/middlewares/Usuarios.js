@@ -1,5 +1,5 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const authConfig = require("../config/authConfig");
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
   if (!/^Bearer$/i.test(schema))
     return res.status(401).send({ error: "Token mau formado" });
 
-  jwt.verify(token, authConfig.secret, (err, decoded) => {
+  jwt.verify(token, process.env.AUTH_USER, (err, decoded) => {
     if (err) {
       return res.status(401).send({ error: "Token inválido" });
     }
