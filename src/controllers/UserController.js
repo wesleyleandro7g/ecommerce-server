@@ -18,6 +18,8 @@ module.exports = {
 
       const newuser = await User.create({ ...req.body, id_empresa: _id });
 
+      newuser.senha = undefined;
+
       return res.status(200).send({ newuser });
     } catch (error) {
       console.log(error);
@@ -30,14 +32,14 @@ module.exports = {
     const id_empresa = req.companyId;
 
     try {
-      const users = await User.find({ id_empresa }).populate("Empresa");
+      const users = await User.find({ id_empresa });
 
       const count = users.length;
 
       if (count === 0)
         return res.status(404).send({ NOTFOUND: "Nenhum usuario encontrado" });
 
-      return res.status(200).send({ users });
+      return res.status(200).send({ TOTAL: count, users });
     } catch (error) {
       return res.stauts(400).send({ error });
     }

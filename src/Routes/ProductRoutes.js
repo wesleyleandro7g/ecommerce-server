@@ -3,10 +3,27 @@ const router = routes();
 
 const ProductController = require("../controllers/ProductController");
 
-router.post("/:companyId", ProductController.create);
-router.get("/:companyId/produtos", ProductController.list);
-router.get("/:companyId/:productId", ProductController.show);
-router.put("/:companyId/:productId", ProductController.update);
-router.delete("/:companyId/:productId", ProductController.delete);
+const CompanyMidlleware = require("../middlewares/Admin");
+const UserMidlleware = require("../middlewares/Usuarios");
+
+router.post("/create", CompanyMidlleware, ProductController.create);
+router.post("/create/:companyId", UserMidlleware, ProductController.create);
+router.get("/list/:companyId", ProductController.list);
+router.get("/show/:productId", ProductController.show);
+router.put(
+  "/empresa/update/:productId",
+  CompanyMidlleware,
+  ProductController.update
+);
+router.put(
+  "/usuario/update/:productId",
+  CompanyMidlleware,
+  ProductController.update
+);
+router.delete(
+  "/delete/:productId",
+  CompanyMidlleware,
+  ProductController.delete
+);
 
 module.exports = router;

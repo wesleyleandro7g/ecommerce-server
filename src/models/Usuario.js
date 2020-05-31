@@ -8,7 +8,11 @@ const UsuarioSchema = new db.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: false,
+  },
+  telefone_contato: {
+    type: String,
+    required: false,
   },
   senha: {
     type: String,
