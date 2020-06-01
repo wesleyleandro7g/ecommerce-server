@@ -1,21 +1,30 @@
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/Usuario");
 const Company = require("../models/Empresa");
 
 module.exports = {
   //### Cadastra um novo usuário
   async create(req, res) {
-    const _id = req.params.empresaId;
-    const { email } = req.body;
+    const _id = req.userPayload.empresa;
+    const { nome } = req.body;
 
     try {
       if (!(await Company.findById({ _id })))
         return res.status(404).send({ error: "Empresa não encontrada" });
 
-      const user = await User.findOne({ email, id_empresa: _id });
+      if (!req.userPayload.admin)
+        return res.status(401).send({
+          Negado: "Usuário não possui permissão para realizar essa operação",
+        });
+
+      const user = await User.findOne({ nome, id_empresa: _id });
 
       if (user) return res.status(400).send({ error: "Usuário já cadastrado" });
 
       const newuser = await User.create({ ...req.body, id_empresa: _id });
+
+      newuser.senha = undefined;
 
       return res.status(200).send({ newuser });
     } catch (error) {
@@ -26,15 +35,22 @@ module.exports = {
 
   //### Lista os usuários de uma empresa
   async list(req, res) {
-    const id_empresa = req.params.empresaId;
+    const id_empresa = req.userPayload.empresa;
 
     try {
-      const users = await User.find({ id_empresa }).populate("Empresa");
+      if (!req.userPayload.admin)
+        return res.status(401).send({
+          Negado: "Usuário não possui permissão para realizar essa operação",
+        });
 
-      if (!users)
-        return res.status(404).send({ error: "Usuário não encontrado" });
+      const users = await User.find({ id_empresa });
 
-      return res.status(200).send({ users });
+      const count = users.length;
+
+      if (count === 0)
+        return res.status(404).send({ NOTFOUND: "Nenhum usuario encontrado" });
+
+      return res.status(200).send({ TOTAL: count, users });
     } catch (error) {
       return res.stauts(400).send({ error });
     }
@@ -55,19 +71,26 @@ module.exports = {
 
   //### ALtera informações de um usuário
   async update(req, res) {
-    const _id = req.params.userId;
-    const id_empresa = req.params.empresaId;
-
     try {
-      const user = await User.findOne({ _id, id_empresa });
+      var hash;
+      const { senha } = req.body;
+
+      const user = await User.findById(req.userPayload.id).select("+senha");
+
+      if (senha) {
+        hash = await bcrypt.hash(senha, 10);
+      } else {
+        hash = user.senha;
+      }
 
       if (!user)
         return res.status(400).send({ error: "Usuário não encontrado" });
 
       const updateUser = await User.findByIdAndUpdate(
-        _id,
+        req.userPayload.id,
         {
           ...req.body,
+          senha: hash,
         },
         { new: true }
       );
@@ -75,21 +98,26 @@ module.exports = {
       return res.status(200).send({ updateUser });
     } catch (error) {
       console.log(error);
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
   //### Deleta um usuário
   async delete(req, res) {
     const _id = req.params.userId;
-    const id_empresa = req.params.empresaId;
+    const id_empresa = req.userPayload.empresa;
 
     try {
+      if (!req.userPayload.admin)
+        return res.status(401).send({
+          Negado: "Usuário não possui permissão para realizar essa operação",
+        });
+
       const user = await User.findOneAndRemove({ _id, id_empresa });
 
       if (!user) return res.send({ error: "Usuário não encontrado" });
 
-      return res.status(200).send({ error: "Usuário deletado" });
+      return res.status(200).send({ Success: "Usuário deletado" });
     } catch (error) {
       return res.stauts(400).send({ error });
     }

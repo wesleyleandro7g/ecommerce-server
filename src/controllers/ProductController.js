@@ -4,13 +4,20 @@ const Company = require("../models/Empresa");
 module.exports = {
   //### Cadastra um novo produto
   async create(req, res) {
-    if (!(await Company.findById(req.params.companyId)))
-      return res.status(404).send({ error: "Empresa não encontrada" });
-
     try {
+      const empresa = req.params.companyId;
+      var _id = "";
+
+      if (empresa) {
+        _id = empresa;
+      } else _id = req.companyId;
+
+      if (!(await Company.findById(_id)))
+        return res.status(404).send({ error: "Empresa não encontrada" });
+
       const product = await Product.create({
         ...req.body,
-        id_empresa: req.params.companyId,
+        id_empresa: _id,
       });
 
       return res.status(200).send({ product });
@@ -26,9 +33,12 @@ module.exports = {
         id_empresa: req.params.companyId,
       });
 
-      if (!products) return res.status(404).send("Nenhum produto cadastrado");
+      const count = products.length;
 
-      return res.status(200).send({ products });
+      if (count === 0)
+        return res.status(404).send({ NOTFOUND: "Nenhum produto encontrado" });
+
+      return res.status(200).send({ TOTAL: count, products });
     } catch (error) {
       return res.status(400).send(error);
     }
@@ -78,7 +88,7 @@ module.exports = {
       if (!product)
         return res.status(404).send({ error: "Produto não encontrado" });
 
-      return res.status(200).send({ Deleted: "Ok" });
+      return res.status(200).send({ Success: "Produto deletado" });
     } catch (error) {
       return res.status(400).send(error);
     }

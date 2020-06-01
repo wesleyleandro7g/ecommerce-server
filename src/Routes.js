@@ -1,58 +1,49 @@
-const router = require("express").Router;
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
 
-const app = router();
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-const AuthController = require("./controllers/AuthController");
-const UserController = require("./controllers/UserController");
-const CompanyController = require("./controllers/CompanyController");
-const ProductController = require("./controllers/ProductController");
-const ClientController = require("./controllers/ClientController");
+const AuthRoutes = require("./Routes/AuthRoutes");
+const CompanyRoutes = require("./Routes/CompanyRoutes");
+const UserRoutes = require("./Routes/UserRoutes");
+const ProductRoutes = require("./Routes/ProductRoutes");
+const ClientRoutes = require("./Routes/ClientRoutes");
+const RequestRoutes = require("./Routes/RequestRoutes");
 
-const userMiddlewares = require("./middlewares/AuthenticateUsers");
-const clientMiddleware = require("./middlewares/AuthenticateClients");
+app.use(morgan("dev"));
 
-//### Rotas para autenticar usuários
-app.post("/empresa/:empresaId/authentication", AuthController.userAuthenticate);
-app.post(
-  "/cliente/:clientId/authentication",
-  AuthController.clientAuthenticate
-);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
 
-//###_### Rotas que não precisam de autenticação
-//### Rotas para operações com empresas
-app.post("/empresa", CompanyController.create);
-app.get("/empresa", CompanyController.list);
-app.get("/empresa/:empresaId", CompanyController.show);
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "POST", "GET", "PUT", "DELETE");
+    return res.status(200).send({});
+  }
 
-//### Rotas para operações com produtos
-app.get("/produtos/:companyId/products", ProductController.list);
-app.get("/produtos/:companyId/:productId", ProductController.show);
+  next();
+});
 
-//### Middleware de autenticação de clientes
-app.use(clientMiddleware);
+app.use("/login", AuthRoutes);
+app.use("/empresas", CompanyRoutes);
+app.use("/usuarios", UserRoutes);
+app.use("/produtos", ProductRoutes);
+app.use("/clientes", ClientRoutes);
+app.use("/pedidos", RequestRoutes);
 
-//### Rotas para operações com clientes
-app.post("/cliente", ClientController.create);
-app.get("/cliente/:clientId", ClientController.show);
+app.use((req, res, next) => {
+  const error = new Error("Rota não encontrada");
+  error.status = 404;
+  next(error);
+});
 
-//### Middleware de autenticação de usuários
-app.use(userMiddlewares);
-
-//###_### Rotas que precisam de autenticação
-//### Rotas para operações com empresas
-app.put("/empresa/:empresaId", CompanyController.update);
-app.delete("/empresa/:empresaId", CompanyController.delete);
-
-//### Rotas para operações com usuários
-app.post("/usuarios/:empresaId/user", UserController.create);
-app.get("/usuarios/:empresaId", UserController.list);
-app.get("/usuarios/:empresaId/:userId", UserController.show);
-app.put("/usuarios/:empresaId/:userId", UserController.update);
-app.delete("/usuarios/:empresaId/:userId", UserController.delete);
-
-//### Rotas para operações com produtos
-app.post("/produtos/:companyId", ProductController.create);
-app.put("/produtos/:companyId", ProductController.update);
-app.delete("/produtos/:companyId", ProductController.delete);
+app.use((error, req, res) => {
+  return res
+    .status(error.statusCode || 500)
+    .send({ error: { message: error.statusMessage } });
+});
 
 module.exports = app;

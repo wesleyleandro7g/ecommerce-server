@@ -1,3 +1,4 @@
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/Usuario");
@@ -6,11 +7,12 @@ const Client = require("../models/Cliente");
 const jwt = require("../config/jwt");
 
 module.exports = {
+  //### Autenticação dos usuários
   async userAuthenticate(req, res) {
-    const { email, senha } = req.body;
+    const { nome, senha } = req.body;
     const id_empresa = req.params.empresaId;
 
-    const user = await User.findOne({ email, id_empresa }).select("+senha");
+    const user = await User.findOne({ nome, id_empresa }).select("+senha");
 
     try {
       if (!user)
@@ -21,13 +23,23 @@ module.exports = {
 
       user.senha = undefined;
 
-      const token = await jwt.sign(user.id);
+      const payload = {
+        id: user.id,
+        nome: user.nome,
+        empresa: user.id_empresa,
+        email: user.email,
+        admin: user.administrador,
+      };
+
+      const token = await jwt.sign(payload, process.env.AUTH_USER, 8400);
 
       return res.status(200).send({ user, token: token });
     } catch (error) {
       return res.status(400).send({ error: "Falha ao autenticar" });
     }
   },
+
+  //### Autenticação dos clientes
   async clientAuthenticate(req, res) {
     const { email, senha } = req.body;
 
@@ -42,7 +54,7 @@ module.exports = {
 
       client.senha = undefined;
 
-      const token = await jwt.sign(client.id);
+      const token = await jwt.sign(client.id, process.env.AUTH_CLIENT, 8400);
 
       return res.status(200).send({ client, token: token });
     } catch (error) {

@@ -5,6 +5,16 @@ const PedidoSchema = new db.Schema({
     type: String,
     required: true,
   },
+  entregue: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  cancelado: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   produtos: [
     {
       type: db.Schema.Types.ObjectId,

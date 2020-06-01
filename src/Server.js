@@ -1,9 +1,8 @@
-const express = require("express");
-const router = require("./Routes");
+const http = require("http");
+const routes = require("./Routes");
 
-const server = express();
+const port = process.env.PORT || 3333;
 
-server.use(express.json());
-server.use(router);
+const server = http.createServer(routes);
 
-server.listen(3333);
+server.listen(port);
