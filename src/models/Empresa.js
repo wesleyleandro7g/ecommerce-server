@@ -18,22 +18,10 @@ const EmpresaSchema = new db.Schema({
     type: String,
     required: true,
   },
-  senha: {
-    type: String,
-    required: true,
-    select: false,
-  },
   data_cadastro: {
     type: Date,
     default: Date.now,
   },
-});
-
-EmpresaSchema.pre("save", async function (next) {
-  const hash = await bcrypt.hash(this.senha, 10);
-  this.senha = hash;
-
-  next();
 });
 
 const Empresa = db.model("Empresa", EmpresaSchema);

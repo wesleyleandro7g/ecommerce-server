@@ -13,11 +13,16 @@ module.exports = {
 
       const newcompany = await Company.create(req.body);
 
-      newcompany.senha = undefined;
+      await User.create({
+        nome: "Adm",
+        administrador: true,
+        senha: "adm",
+        id_empresa: newcompany._id,
+      });
 
       return res.status(200).send({ newcompany });
     } catch (error) {
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -54,8 +59,11 @@ module.exports = {
   //### Altera os dados cadastrais de uma empresa
   async update(req, res) {
     try {
+      if (!req.userPayload.admin)
+        return res.status(401).send({ Negado: "Usuário não tem permissão" });
+
       const company = await Company.findByIdAndUpdate(
-        req.companyId,
+        req.userPayload.empresa,
         {
           ...req.body,
         },
@@ -70,9 +78,12 @@ module.exports = {
 
   //### Deleta uma empresa específica
   async delete(req, res) {
-    const id_empresa = req.companyId;
+    const id_empresa = req.userPayload.empresa;
 
     try {
+      if (!req.userPayload.admin)
+        return res.status(401).send({ Negado: "Usuário não tem permissão" });
+
       const users = await User.find({ id_empresa });
       const products = await Product.find({ id_empresa });
 
@@ -86,7 +97,7 @@ module.exports = {
         await Product.findByIdAndRemove({ _id });
       });
 
-      await Company.findByIdAndRemove(req.companyId);
+      await Company.findByIdAndRemove(req.userPayload.empresa);
 
       return res.status(200).send({ Success: "Empresa deletada" });
     } catch (error) {

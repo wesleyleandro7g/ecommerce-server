@@ -3,12 +3,12 @@ const router = routes();
 
 const CompanyController = require("../controllers/CompanyController");
 
-const CompanyMidlleare = require("../middlewares/Admin");
+const UserMidllweare = require("../middlewares/Usuarios");
 
 router.post("/create", CompanyController.create);
 router.get("/list", CompanyController.list);
 router.get("/list/:empresaId", CompanyController.show);
-router.put("/update", CompanyMidlleare, CompanyController.update);
-router.delete("/delete", CompanyMidlleare, CompanyController.delete);
+router.put("/update", UserMidllweare, CompanyController.update);
+router.delete("/delete", UserMidllweare, CompanyController.delete);
 
 module.exports = router;

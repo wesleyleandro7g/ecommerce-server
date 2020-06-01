@@ -14,6 +14,11 @@ const UsuarioSchema = new db.Schema({
     type: String,
     required: false,
   },
+  administrador: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   senha: {
     type: String,
     required: true,

@@ -4,16 +4,11 @@ const router = routes();
 const UserController = require("../controllers/UserController");
 
 const UserMidlleware = require("../middlewares/Usuarios");
-const CompanyMidlleware = require("../middlewares/Admin");
 
-router.post("/create", CompanyMidlleware, UserController.create);
-router.get("/list", CompanyMidlleware, UserController.list);
-router.get(
-  "/:empresaId/:userId",
-  CompanyMidlleware || UserMidlleware,
-  UserController.show
-);
+router.post("/create", UserMidlleware, UserController.create);
+router.get("/list", UserMidlleware, UserController.list);
+router.get("/:empresaId/:userId", UserMidlleware, UserController.show);
 router.put("/update", UserMidlleware, UserController.update);
-router.delete("/delete/:userId", CompanyMidlleware, UserController.delete);
+router.delete("/delete/:userId", UserMidlleware, UserController.delete);
 
 module.exports = router;
