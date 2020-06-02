@@ -54,7 +54,13 @@ module.exports = {
 
       client.senha = undefined;
 
-      const token = await jwt.sign(client.id, process.env.AUTH_CLIENT, 8400);
+      const payload = {
+        id: client.id,
+        nome: client.nome,
+        email: client.email,
+      };
+
+      const token = await jwt.sign(payload, process.env.AUTH_CLIENT, 8400);
 
       return res.status(200).send({ client, token: token });
     } catch (error) {
