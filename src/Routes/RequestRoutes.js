@@ -7,9 +7,26 @@ const UserMidlleware = require("../middlewares/Usuarios");
 const ClientMilleware = require("../middlewares/Clientes");
 
 router.post("/create/:empresaId", ClientMilleware, RequestController.create);
-router.get("/list/cliente", RequestController.listAllClientRequests);
-router.get("/list/empresa", RequestController.listAllCompanyRequests);
-router.put("/update/cliente/:pedidoId", RequestController.updateClientRequest);
-router.put("/update/empresa/:pedidoId", RequestController.updateCompanyRequest);
+router.put(
+  "/cliente/update/:pedidoId",
+  ClientMilleware,
+  RequestController.updateClientRequest
+);
+router.get(
+  "/cliente/list",
+  ClientMilleware,
+  RequestController.listAllClientRequests
+);
+
+router.put(
+  "/empresa/update/:pedidoId",
+  UserMidlleware,
+  RequestController.updateCompanyRequest
+);
+router.get(
+  "/empresa/list",
+  UserMidlleware,
+  RequestController.listAllCompanyRequests
+);
 
 module.exports = router;

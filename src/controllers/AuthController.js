@@ -24,7 +24,7 @@ module.exports = {
       user.senha = undefined;
 
       const payload = {
-        id: user.id,
+        id: user._id,
         nome: user.nome,
         empresa: user.id_empresa,
         email: user.email,
@@ -55,7 +55,7 @@ module.exports = {
       client.senha = undefined;
 
       const payload = {
-        id: client.id,
+        id: client._id,
         nome: client.nome,
         email: client.email,
       };

@@ -1,5 +1,6 @@
 const Request = require("../models/Pedido");
 const Producs = require("../models/Produto");
+const Company = require("../models/Empresa");
 
 module.exports = {
   //### Realiza um novo pedido
@@ -10,6 +11,10 @@ module.exports = {
 
       if (!id_empresa)
         return res.status(400).send({ error: "Informe a empresa" });
+
+      const empresa = await Company.findById(id_empresa);
+      if (!empresa)
+        return res.status(400).send({ error: "Empresa não encontrada" });
 
       // const { produtos } = req.body;
 
@@ -38,8 +43,10 @@ module.exports = {
   //### Lista todos os pedidos de um cliente especifico
   async listAllClientRequests(req, res) {
     try {
+      const id_cliente = req.clientId.id;
+
       const requests = await Request.find({
-        id_cliente: req.clienteId.id,
+        id_cliente,
       }).populate(["produtos", "id_empresa"]);
 
       const count = requests.length;
@@ -49,16 +56,17 @@ module.exports = {
 
       return res.status(200).send({ TOTAL: count, requests });
     } catch (error) {
-      console.log(error);
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
   //### Lista todos os pedidos de um cliente especifico
   async listAllCompanyRequests(req, res) {
     try {
+      const id_empresa = req.userPayload.empresa;
+
       const requests = await Request.find({
-        id_empresa: req.empresaId.id,
+        id_empresa,
       }).populate(["produtos", "id_cliente"]);
 
       const count = requests.length;
@@ -68,7 +76,7 @@ module.exports = {
 
       return res.status(200).send({ TOTAL: count, requests });
     } catch (error) {
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -106,7 +114,7 @@ module.exports = {
 
       return res.status(200).send({ updateRequest });
     } catch (error) {
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 };
