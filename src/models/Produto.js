@@ -6,7 +6,7 @@ const ProdutoSchema = new db.Schema({
     required: true,
   },
   preco: {
-    type: String,
+    type: db.Schema.Types.Number,
     required: true,
   },
   preco_promocional: {

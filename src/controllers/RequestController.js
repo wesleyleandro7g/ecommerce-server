@@ -1,13 +1,27 @@
 const Request = require("../models/Pedido");
+const Producs = require("../models/Produto");
 
 module.exports = {
   //### Realiza um novo pedido
   async create(req, res) {
-    const id_empresa = req.params.empresaId;
-    const id_cliente = req.params.clienteId;
     try {
-      if (!id_empresa || !id_cliente)
-        return res.status(400).send({ error: "Informe a empresa e o cliente" });
+      const id_empresa = req.params.empresaId;
+      const id_cliente = req.clientId.id;
+
+      if (!id_empresa)
+        return res.status(400).send({ error: "Informe a empresa" });
+
+      // const { produtos } = req.body;
+
+      // const retorno = produtos.map(async (index) => {
+      //   const productRequest = await Producs.findById(index);
+
+      //   if (productRequest.id_empresa != req.params.empresaId) {
+      //     return `O produto ${productRequest.nome} não pertence a essa empresa`;
+      //   }
+      // });
+
+      // console.log(retorno);
 
       const newrequest = await Request.create({
         ...req.body,
@@ -17,7 +31,7 @@ module.exports = {
 
       return res.status(200).send({ newrequest });
     } catch (error) {
-      return res.status(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -25,7 +39,7 @@ module.exports = {
   async listAllClientRequests(req, res) {
     try {
       const requests = await Request.find({
-        id_cliente: req.params.clienteId,
+        id_cliente: req.clienteId.id,
       }).populate(["produtos", "id_empresa"]);
 
       const count = requests.length;
@@ -44,7 +58,7 @@ module.exports = {
   async listAllCompanyRequests(req, res) {
     try {
       const requests = await Request.find({
-        id_empresa: req.params.empresaId,
+        id_empresa: req.empresaId.id,
       }).populate(["produtos", "id_cliente"]);
 
       const count = requests.length;
