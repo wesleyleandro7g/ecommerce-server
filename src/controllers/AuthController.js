@@ -5,6 +5,7 @@ const User = require("../models/Usuario");
 const Client = require("../models/Cliente");
 
 const jwtGenerate = require("../config/jwtGenerate");
+const jwtVerify = require("../config/jwtVerify");
 
 module.exports = {
   //### Autenticação dos usuários
@@ -73,6 +74,66 @@ module.exports = {
       return res.status(200).send({ client, token: token });
     } catch (error) {
       return res.status(400).send({ error: "Falha ao autenticar" });
+    }
+  },
+
+  //### Atualiza token de usuários
+  async userRefreshToken(req, res) {
+    try {
+      const authHeader = req.headers.authorization;
+
+      const decoded = await jwtVerify(res, authHeader, process.env.AUTH_USER);
+
+      const payload = {
+        id: decoded.id,
+        nome: decoded.nome,
+        empresa: decoded.empresa,
+        email: decoded.email,
+        admin: decoded.admin,
+      };
+
+      console.log(payload); // Não está retornado o e-mail para user ADM
+
+      const token = await jwtGenerate.sign(
+        payload,
+        process.env.AUTH_USER,
+        8400
+      );
+
+      return res
+        .status(200)
+        .send({ Refreshed: "Token atualizado", token: token });
+    } catch (error) {
+      return res.status(400).send({ error: error.message });
+    }
+  },
+
+  //### Atualiza token de clientes
+  async clientRefreshToken(req, res) {
+    try {
+      const authHeader = req.headers.authorization;
+
+      const decoded = await jwtVerify(res, authHeader, process.env.AUTH_CLIENT);
+
+      const payload = {
+        id: decoded.id,
+        nome: decoded.nome,
+        email: decoded.email,
+      };
+
+      console.log(payload); // Não está retornado o e-mail para user ADM
+
+      const token = await jwtGenerate.sign(
+        payload,
+        process.env.AUTH_CLIENT,
+        8400
+      );
+
+      return res
+        .status(200)
+        .send({ Refreshed: "Token atualizado", token: token });
+    } catch (error) {
+      return res.status(400).send({ error: error.message });
     }
   },
 };
