@@ -1,11 +1,10 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const jsonwebtoken = require("jsonwebtoken");
 
 const User = require("../models/Usuario");
 const Client = require("../models/Cliente");
 
-const jwt = require("../config/jwt");
+const jwtGenerate = require("../config/jwtGenerate");
 
 module.exports = {
   //### Autenticação dos usuários
@@ -32,7 +31,11 @@ module.exports = {
         admin: user.administrador,
       };
 
-      const token = await jwt.sign(payload, process.env.AUTH_USER, 8400);
+      const token = await jwtGenerate.sign(
+        payload,
+        process.env.AUTH_USER,
+        8400
+      );
 
       return res.status(200).send({ user, token: token });
     } catch (error) {
@@ -61,7 +64,11 @@ module.exports = {
         email: client.email,
       };
 
-      const token = await jwt.sign(payload, process.env.AUTH_CLIENT, 8400);
+      const token = await jwtGenerate.sign(
+        payload,
+        process.env.AUTH_CLIENT,
+        8400
+      );
 
       return res.status(200).send({ client, token: token });
     } catch (error) {
