@@ -92,8 +92,6 @@ module.exports = {
         admin: decoded.admin,
       };
 
-      console.log(payload); // Não está retornado o e-mail para user ADM
-
       const token = await jwtGenerate.sign(
         payload,
         process.env.AUTH_USER,
@@ -120,8 +118,6 @@ module.exports = {
         nome: decoded.nome,
         email: decoded.email,
       };
-
-      console.log(payload); // Não está retornado o e-mail para user ADM
 
       const token = await jwtGenerate.sign(
         payload,
