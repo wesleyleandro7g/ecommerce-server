@@ -4,8 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/Usuario");
 const Client = require("../models/Cliente");
 
-const jwtGenerate = require("../config/jwtGenerate");
-const jwtVerify = require("../config/jwtVerify");
+const jwt = require("../config/JWT");
 
 module.exports = {
   //### Autenticação dos usuários
@@ -32,11 +31,7 @@ module.exports = {
         admin: user.administrador,
       };
 
-      const token = await jwtGenerate.sign(
-        payload,
-        process.env.AUTH_USER,
-        8400
-      );
+      const token = await jwt.generate(payload, process.env.AUTH_USER, 8400);
 
       return res.status(200).send({ user, token: token });
     } catch (error) {
@@ -65,11 +60,7 @@ module.exports = {
         email: client.email,
       };
 
-      const token = await jwtGenerate.sign(
-        payload,
-        process.env.AUTH_CLIENT,
-        8400
-      );
+      const token = await jwt.generate(payload, process.env.AUTH_CLIENT, 8400);
 
       return res.status(200).send({ client, token: token });
     } catch (error) {
@@ -82,7 +73,7 @@ module.exports = {
     try {
       const authHeader = req.headers.authorization;
 
-      const decoded = await jwtVerify(res, authHeader, process.env.AUTH_USER);
+      const decoded = await jwt.verify(res, authHeader, process.env.AUTH_USER);
 
       const payload = {
         id: decoded.id,
@@ -92,11 +83,7 @@ module.exports = {
         admin: decoded.admin,
       };
 
-      const token = await jwtGenerate.sign(
-        payload,
-        process.env.AUTH_USER,
-        8400
-      );
+      const token = await jwt.generate(payload, process.env.AUTH_USER, 8400);
 
       return res
         .status(200)
@@ -111,7 +98,11 @@ module.exports = {
     try {
       const authHeader = req.headers.authorization;
 
-      const decoded = await jwtVerify(res, authHeader, process.env.AUTH_CLIENT);
+      const decoded = await jwt.verify(
+        res,
+        authHeader,
+        process.env.AUTH_CLIENT
+      );
 
       const payload = {
         id: decoded.id,
@@ -119,11 +110,7 @@ module.exports = {
         email: decoded.email,
       };
 
-      const token = await jwtGenerate.sign(
-        payload,
-        process.env.AUTH_CLIENT,
-        8400
-      );
+      const token = await jwt.generate(payload, process.env.AUTH_CLIENT, 8400);
 
       return res
         .status(200)

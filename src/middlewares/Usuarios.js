@@ -1,10 +1,10 @@
 require("dotenv").config();
-const jwtVerify = require("../config/jwtVerify");
+const jwt = require("../config/JWT");
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  const decoded = await jwtVerify(res, authHeader, process.env.AUTH_USER);
+  const decoded = await jwt.verify(res, authHeader, process.env.AUTH_USER);
 
   req.userPayload = decoded;
 
