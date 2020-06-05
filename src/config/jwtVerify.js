@@ -1,9 +1,6 @@
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
+module.exports = (res, authHeader, hash) => {
   if (!authHeader)
     return res.status(401).send({ error: "Token não informado" });
 
@@ -17,13 +14,13 @@ module.exports = (req, res, next) => {
   if (!/^Bearer$/i.test(schema))
     return res.status(401).send({ error: "Token mau formado" });
 
-  jwt.verify(token, process.env.AUTH_COMPANY, (err, decoded) => {
+  const authPayload = jwt.verify(token, hash, (err, decoded) => {
     if (err) {
       return res.status(401).send({ error: "Token inválido" });
     }
 
-    req.companyId = decoded.payload.id;
-
-    return next();
+    return decoded.payload;
   });
+
+  return authPayload;
 };
