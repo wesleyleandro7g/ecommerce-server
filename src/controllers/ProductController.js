@@ -12,6 +12,7 @@ module.exports = {
 
       const product = await Product.create({
         ...req.body,
+        imagem: req.file.filename,
         id_empresa: _id,
       });
 
