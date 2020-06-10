@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-//7
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
