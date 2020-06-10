@@ -17,12 +17,12 @@ module.exports = (req, res, next) => {
   if (!/^Bearer$/i.test(schema))
     return res.status(401).send({ error: "Token mau formado" });
 
-  jwt.verify(token, process.env.AUTH_USER, (err, decoded) => {
+  jwt.verify(token, process.env.AUTH_COMPANY, (err, decoded) => {
     if (err) {
       return res.status(401).send({ error: "Token inválido" });
     }
 
-    req.userPayload = decoded.payload;
+    req.companyId = decoded.payload.id;
 
     return next();
   });

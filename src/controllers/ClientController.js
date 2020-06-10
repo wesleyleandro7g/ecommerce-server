@@ -1,5 +1,3 @@
-const bcrypt = require("bcryptjs");
-
 const Client = require("../models/Cliente");
 
 module.exports = {
@@ -19,15 +17,16 @@ module.exports = {
 
       return res.status(200).send({ newclient });
     } catch (error) {
+      console.log(error);
       return res.status(400).send({ error });
     }
   },
 
   //### Exibe um cliente específico
   async show(req, res) {
-    try {
-      const _id = req.clientId.id;
+    const _id = req.params.clientId;
 
+    try {
       const client = await Client.findById({ _id });
 
       return res.status(200).send({ client });
@@ -38,18 +37,10 @@ module.exports = {
 
   //### ALtera informações de um cliente
   async update(req, res) {
+    const _id = req.params.clientId;
+
     try {
-      const _id = req.clientId.id;
-      var hash;
-      const { senha } = req.body;
-
-      const client = await (await Client.findOne({ _id })).isSelected("+senha");
-
-      if (senha) {
-        hash = await bcrypt.hash(senha, 10);
-      } else {
-        hash = user.senha;
-      }
+      const client = await Client.findOne({ _id });
 
       if (!client)
         return res.status(400).send({ error: "Cliente não encontrado" });
@@ -58,20 +49,20 @@ module.exports = {
         _id,
         {
           ...req.body,
-          senha: hash,
         },
         { new: true }
       );
 
       return res.status(200).send({ updateClient });
     } catch (error) {
+      console.log(error);
       return res.status(400).send({ error });
     }
   },
 
   //### Deleta um cliente
   async delete(req, res) {
-    const _id = req.clientId.id;
+    const _id = req.params.clientId;
 
     try {
       const client = await Client.findOneAndRemove({ _id });

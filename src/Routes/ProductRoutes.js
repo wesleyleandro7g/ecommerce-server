@@ -1,23 +1,29 @@
 const routes = require("express").Router;
-const multer = require("multer");
-
 const router = routes();
-
-const multerConfig = require("../config/Multer");
 
 const ProductController = require("../controllers/ProductController");
 
+const CompanyMidlleware = require("../middlewares/Admin");
 const UserMidlleware = require("../middlewares/Usuarios");
 
-router.post(
-  "/create",
-  UserMidlleware,
-  multer(multerConfig).single("file"),
-  ProductController.create
-);
+router.post("/create", CompanyMidlleware, ProductController.create);
+router.post("/create/:companyId", UserMidlleware, ProductController.create);
 router.get("/list/:companyId", ProductController.list);
 router.get("/show/:productId", ProductController.show);
-router.put("/update/:productId", UserMidlleware, ProductController.update);
-router.delete("/delete/:productId", UserMidlleware, ProductController.delete);
+router.put(
+  "/empresa/update/:productId",
+  CompanyMidlleware,
+  ProductController.update
+);
+router.put(
+  "/usuario/update/:productId",
+  CompanyMidlleware,
+  ProductController.update
+);
+router.delete(
+  "/delete/:productId",
+  CompanyMidlleware,
+  ProductController.delete
+);
 
 module.exports = router;
