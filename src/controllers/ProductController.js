@@ -5,24 +5,22 @@ module.exports = {
   //### Cadastra um novo produto
   async create(req, res) {
     try {
-      const empresa = req.params.companyId;
-      var _id = "";
-
-      if (empresa) {
-        _id = empresa;
-      } else _id = req.companyId;
+      const _id = req.userPayload.empresa;
+      console.log(req.file);
 
       if (!(await Company.findById(_id)))
         return res.status(404).send({ error: "Empresa não encontrada" });
 
       const product = await Product.create({
         ...req.body,
+        imagem: req.file.filename,
+        imagemURL: req.file.location,
         id_empresa: _id,
       });
 
       return res.status(200).send({ product });
     } catch (error) {
-      return res.status(400).send(error);
+      return res.status(400).send({ error: error.message });
     }
   },
 

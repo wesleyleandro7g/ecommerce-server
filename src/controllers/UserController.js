@@ -86,6 +86,12 @@ module.exports = {
       if (!user)
         return res.status(400).send({ error: "Usuário não encontrado" });
 
+      if (!user.administrador && req.body.administrador)
+        req.body.administrador = false;
+
+      if (user.administrador && req.body.administrador === false)
+        req.body.administrador = true;
+
       const updateUser = await User.findByIdAndUpdate(
         req.userPayload.id,
         {
