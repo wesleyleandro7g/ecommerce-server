@@ -60,9 +60,7 @@ module.exports = {
   async update(req, res) {
     try {
       if (!req.userPayload.admin)
-        return res.status(401).send({
-          Negado: "Usuário não tem permissão para realizar essa operação",
-        });
+        return res.status(401).send({ Negado: "Usuário não tem permissão" });
 
       const company = await Company.findByIdAndUpdate(
         req.userPayload.empresa,
@@ -84,11 +82,7 @@ module.exports = {
 
     try {
       if (!req.userPayload.admin)
-        return res
-          .status(401)
-          .send({
-            Negado: "Usuário não tem permissão para realizar essa operação",
-          });
+        return res.status(401).send({ Negado: "Usuário não tem permissão" });
 
       const users = await User.find({ id_empresa });
       const products = await Product.find({ id_empresa });

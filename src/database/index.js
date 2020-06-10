@@ -1,8 +1,6 @@
-require("dotenv").config();
-
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect("mongodb://localhost/db_ecommerce", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
