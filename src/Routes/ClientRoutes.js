@@ -3,9 +3,11 @@ const router = routes();
 
 const ClientController = require("../controllers/ClientController");
 
-router.post("/", ClientController.create);
-router.get("/:clientId", ClientController.show);
-router.put("/:clientId", ClientController.update);
-router.delete("/:clientId", ClientController.delete);
+const ClientMidlleware = require("../middlewares/Clientes");
+
+router.post("/create", ClientController.create);
+router.get("/show", ClientMidlleware, ClientController.show);
+router.put("/update", ClientMidlleware, ClientController.update);
+router.delete("/delete", ClientMidlleware, ClientController.delete);
 
 module.exports = router;
