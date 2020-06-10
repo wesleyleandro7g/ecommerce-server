@@ -11,8 +11,8 @@ const UserMidlleware = require("../middlewares/Usuarios");
 
 router.post(
   "/create",
-  multer(multerConfig).single("file"),
   UserMidlleware,
+  multer(multerConfig).single("file"),
   ProductController.create
 );
 router.get("/list/:companyId", ProductController.list);
