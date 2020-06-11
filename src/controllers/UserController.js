@@ -52,7 +52,7 @@ module.exports = {
 
       return res.status(200).send({ TOTAL: count, users });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error });
     }
   },
 

@@ -17,6 +17,14 @@ const EmpresaSchema = new db.Schema({
     type: String,
     required: true,
   },
+  imagem: {
+    type: String,
+    required: false,
+  },
+  imagemURL: {
+    type: String,
+    required: false,
+  },
   data_cadastro: {
     type: Date,
     default: Date.now,
