@@ -1,3 +1,9 @@
+require("dotenv").config();
+
+const aws = require("aws-sdk");
+
+const s3 = new aws.S3();
+
 const Product = require("../models/Produto");
 const Company = require("../models/Empresa");
 
@@ -6,15 +12,14 @@ module.exports = {
   async create(req, res) {
     try {
       const _id = req.userPayload.empresa;
-      console.log(req.file);
 
       if (!(await Company.findById(_id)))
         return res.status(404).send({ error: "Empresa não encontrada" });
 
       const product = await Product.create({
         ...req.body,
-        imagem: req.file.filename,
-        imagemURL: req.file.location,
+        imagem: req.file.key ? req.file.key : "",
+        imagemURL: req.file.location ? req.file.location : "",
         id_empresa: _id,
       });
 
@@ -78,13 +83,22 @@ module.exports = {
     }
   },
 
-  //### Realiza o update de um produto
+  //### Deleta um produto
   async delete(req, res) {
     try {
-      const product = await Product.findByIdAndRemove(req.params.productId);
+      const product = await Product.findById(req.params.productId);
 
       if (!product)
         return res.status(404).send({ error: "Produto não encontrado" });
+
+      if (process.env.STORAGE_TYPE === "s3") {
+        s3.deleteObject({
+          Bucket: "desencoder-ecommerce",
+          Key: product.imagem,
+        }).promise();
+      }
+
+      await Product.findByIdAndRemove(req.params.productId);
 
       return res.status(200).send({ Success: "Produto deletado" });
     } catch (error) {

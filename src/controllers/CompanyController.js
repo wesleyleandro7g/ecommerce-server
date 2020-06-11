@@ -1,3 +1,9 @@
+require("dotenv").config();
+
+const aws = require("aws-sdk");
+
+const s3 = new aws.S3();
+
 const Company = require("../models/Empresa");
 const User = require("../models/Usuario");
 const Product = require("../models/Produto");
@@ -11,7 +17,11 @@ module.exports = {
       if (await Company.findOne({ nome }))
         return res.status(400).send({ error: "Empresa já cadastrada" });
 
-      const newcompany = await Company.create(req.body);
+      const newcompany = await Company.create({
+        ...req.body,
+        imagem: req.file.key ? req.file.key : "",
+        imagemURL: req.file.location ? req.file.location : "",
+      });
 
       await User.create({
         nome: "Adm",
@@ -84,14 +94,13 @@ module.exports = {
 
     try {
       if (!req.userPayload.admin)
-        return res
-          .status(401)
-          .send({
-            Negado: "Usuário não tem permissão para realizar essa operação",
-          });
+        return res.status(401).send({
+          Negado: "Usuário não tem permissão para realizar essa operação",
+        });
 
       const users = await User.find({ id_empresa });
       const products = await Product.find({ id_empresa });
+      const company = await Company.findById(req.userPayload.empresa);
 
       users.map(async (user) => {
         const _id = user._id;
@@ -102,6 +111,13 @@ module.exports = {
         const _id = product._id;
         await Product.findByIdAndRemove({ _id });
       });
+
+      if (process.env.STORAGE_TYPE === "s3") {
+        s3.deleteObject({
+          Bucket: "desencoder-ecommerce",
+          Key: company.imagem,
+        }).promise();
+      }
 
       await Company.findByIdAndRemove(req.userPayload.empresa);
 
