@@ -48,7 +48,7 @@ module.exports = {
 
       return res.status(200).send({ companys });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -62,7 +62,7 @@ module.exports = {
 
       return res.status(200).send({ company });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -84,7 +84,7 @@ module.exports = {
 
       return res.status(200).send({ company });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 
@@ -123,7 +123,7 @@ module.exports = {
 
       return res.status(200).send({ Success: "Empresa deletada" });
     } catch (error) {
-      return res.stauts(400).send({ error });
+      return res.status(400).send({ error: error.message });
     }
   },
 };

@@ -7,3 +7,9 @@ temp/uploads/*
 
 /.env
 .env/
+
+/package-lock.json
+package-lock.json/
+
+/yarn.lock
+yarn.lock/
