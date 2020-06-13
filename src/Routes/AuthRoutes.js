@@ -3,7 +3,7 @@ const router = routes();
 
 const AuthController = require("../controllers/AuthController");
 
-router.post("/usuario/:empresaId", AuthController.userAuthenticate);
+router.post("/usuario", AuthController.userAuthenticate);
 router.post("/cliente", AuthController.clientAuthenticate);
 
 router.post("/refresh/usuario", AuthController.userRefreshToken);
