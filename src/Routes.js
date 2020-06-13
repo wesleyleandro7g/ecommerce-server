@@ -7,6 +7,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const AuthRoutes = require("./Routes/AuthRoutes");
+const TokenRoutes = require("./Routes/TokenRoutes");
 const CompanyRoutes = require("./Routes/CompanyRoutes");
 const UserRoutes = require("./Routes/UserRoutes");
 const ProductRoutes = require("./Routes/ProductRoutes");
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/login", AuthRoutes);
+app.use("/token", TokenRoutes);
 app.use("/empresas", CompanyRoutes);
 app.use("/usuarios", UserRoutes);
 app.use("/produtos", ProductRoutes);

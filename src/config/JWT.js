@@ -10,22 +10,19 @@ module.exports = {
   },
 
   async verify(res, authHeader, hash) {
-    if (!authHeader)
-      return res.status(401).send({ error: "Token não informado" });
+    if (!authHeader) return res.status(401).send(false);
 
     const parts = authHeader.split(" ");
 
-    if (!parts.length === 2)
-      return res.status(401).send({ error: "Erro no Token" });
+    if (!parts.length === 2) return res.status(401).send(false);
 
     const [schema, token] = parts;
 
-    if (!/^Bearer$/i.test(schema))
-      return res.status(401).send({ error: "Token mau formado" });
+    if (!/^Bearer$/i.test(schema)) return res.status(401).send(false);
 
     const authPayload = jwt.verify(token, hash, (err, decoded) => {
       if (err) {
-        return res.status(401).send({ error: "Token inválido" });
+        return res.status(401).send(false);
       }
 
       return decoded.payload;
