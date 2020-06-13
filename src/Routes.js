@@ -13,6 +13,7 @@ const UserRoutes = require("./Routes/UserRoutes");
 const ProductRoutes = require("./Routes/ProductRoutes");
 const ClientRoutes = require("./Routes/ClientRoutes");
 const RequestRoutes = require("./Routes/RequestRoutes");
+const SearchRoutes = require("./Routes/SearchRoutes");
 
 app.use(morgan("dev"));
 
@@ -35,6 +36,7 @@ app.use("/usuarios", UserRoutes);
 app.use("/produtos", ProductRoutes);
 app.use("/clientes", ClientRoutes);
 app.use("/pedidos", RequestRoutes);
+app.use("/search", SearchRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Rota não encontrada");

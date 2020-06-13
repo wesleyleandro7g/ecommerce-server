@@ -3,23 +3,30 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../models/Usuario");
 const Client = require("../models/Cliente");
+const Company = require("../models/Empresa");
 
 const jwt = require("../config/JWT");
 
 module.exports = {
   //### Autenticação dos usuários
   async userAuthenticate(req, res) {
-    const { nome, senha } = req.body;
-    const id_empresa = req.params.empresaId;
-
-    const user = await User.findOne({ nome, id_empresa }).select("+senha");
-
     try {
+      const { nome, senha, empresa } = req.body;
+
+      const company = await Company.findOne({ nome: empresa });
+
+      if (!company)
+        return res.status(404).send({ error: "Empresa não encontrada" });
+
+      const id_empresa = company._id;
+
+      const user = await User.findOne({ nome, id_empresa }).select("+senha");
+
       if (!user)
         return res.status(404).send({ error: "Usuário não encontrado" });
 
       if (!(await bcrypt.compare(senha, user.senha)))
-        return res.status(400).send({ error: "Senha inválida" });
+        return res.status(401).send({ error: "Senha inválida" });
 
       user.senha = undefined;
 

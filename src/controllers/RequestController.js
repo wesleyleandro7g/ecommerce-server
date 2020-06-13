@@ -16,18 +16,6 @@ module.exports = {
       if (!empresa)
         return res.status(400).send({ error: "Empresa não encontrada" });
 
-      // const { produtos } = req.body;
-
-      // const retorno = produtos.map(async (index) => {
-      //   const productRequest = await Producs.findById(index);
-
-      //   if (productRequest.id_empresa != req.params.empresaId) {
-      //     return `O produto ${productRequest.nome} não pertence a essa empresa`;
-      //   }
-      // });
-
-      // console.log(retorno);
-
       const newrequest = await Request.create({
         ...req.body,
         id_empresa: id_empresa,
