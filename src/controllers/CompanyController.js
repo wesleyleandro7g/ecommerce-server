@@ -35,7 +35,7 @@ module.exports = {
         id_empresa: newcompany._id,
       });
 
-      sendEmailToRegister.sendEmailToRegister({ email, passwordTemp });
+      sendEmailToRegister.sendEmailToRegister({ email, passwordTemp, nome });
 
       return res.status(200).send({ newcompany });
     } catch (error) {
