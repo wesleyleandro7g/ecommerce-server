@@ -2,29 +2,31 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 module.exports = {
-  async sendEmailToRegister() {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+  async sendEmailToRegister({ email, passwordTemp }) {
+    const subject = "Ecommerce - Confirmação de cadastro.";
+    const mensage = `Sucesso! Sua empresa agora faz parte do nosso sistema de ecommerce!!! Para acessar a sua conta utilize essas credenciais: [Usuario = "ADM"], [Senha = "${passwordTemp}"]. Lembre-se de alterar sua senha apos o primeiro login. Boas Vendas`;
+
+    const transport = nodemailer.createTransport({
+      host: "smtp.mail.yahoo.com",
       port: 587,
-      secure: true,
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,
       },
     });
 
-    transporter
+    transport
       .sendMail({
-        from: "wesleyleandrosantos14@gmail.com",
-        to: "desencoder@gmail.com",
-        subject: "teste",
-        text: "teste",
+        from: process.env.EMAIL,
+        to: email,
+        subject: subject,
+        text: mensage,
       })
       .then((response) => {
-        console.log(response);
+        console.log({ success: response });
       })
       .catch((error) => {
-        console.log(error);
+        console.log({ erro: error });
       });
   },
 };
