@@ -18,8 +18,8 @@ module.exports = {
 
       const product = await Product.create({
         ...req.body,
-        imagem: req.file.key ? req.file.key : "",
-        imagemURL: req.file.location ? req.file.location : "",
+        imagem: req.file ? req.file.key : "",
+        imagemURL: req.file ? req.file.location : "",
         id_empresa: _id,
       });
 
