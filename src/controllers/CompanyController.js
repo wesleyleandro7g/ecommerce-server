@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("bcryptjs");
 
 const aws = require("aws-sdk");
 
@@ -13,7 +14,7 @@ const sendEmailToRegister = require("../config/Nodemailer");
 module.exports = {
   //### Cadastra uma nova empresa
   async create(req, res) {
-    const { nome } = req.body;
+    const { nome, email } = req.body;
 
     try {
       if (await Company.findOne({ nome }))
@@ -25,14 +26,16 @@ module.exports = {
         imagemURL: req.file ? req.file.location : "",
       });
 
+      const passwordTemp = await bcrypt.hash(nome, 5);
+
       await User.create({
-        nome: "Adm",
+        nome: "ADM",
         administrador: true,
-        senha: "adm",
+        senha: passwordTemp,
         id_empresa: newcompany._id,
       });
 
-      sendEmailToRegister.sendEmailToRegister();
+      sendEmailToRegister.sendEmailToRegister({ email, passwordTemp, nome });
 
       return res.status(200).send({ newcompany });
     } catch (error) {
