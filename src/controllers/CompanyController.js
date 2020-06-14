@@ -19,8 +19,8 @@ module.exports = {
 
       const newcompany = await Company.create({
         ...req.body,
-        imagem: req.file.key ? req.file.key : "",
-        imagemURL: req.file.location ? req.file.location : "",
+        imagem: req.file ? req.file.key : "",
+        imagemURL: req.file ? req.file.location : "",
       });
 
       await User.create({
