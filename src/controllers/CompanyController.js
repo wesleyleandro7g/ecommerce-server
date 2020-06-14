@@ -8,6 +8,8 @@ const Company = require("../models/Empresa");
 const User = require("../models/Usuario");
 const Product = require("../models/Produto");
 
+const sendEmailToRegister = require("../config/Nodemailer");
+
 module.exports = {
   //### Cadastra uma nova empresa
   async create(req, res) {
@@ -29,6 +31,8 @@ module.exports = {
         senha: "adm",
         id_empresa: newcompany._id,
       });
+
+      sendEmailToRegister.sendEmailToRegister();
 
       return res.status(200).send({ newcompany });
     } catch (error) {
