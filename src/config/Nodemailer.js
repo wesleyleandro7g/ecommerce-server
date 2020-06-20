@@ -2,7 +2,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 module.exports = {
-  async sendEmailToRegister({ email, passwordTemp, nome }) {
+  sendEmailToRegister({ email, passwordTemp, nome }) {
     const subject = "Ecommerce - Confirmação de cadastro.";
     const mensage = `Sucesso! Sua empresa agora faz parte do nosso sistema de ecommerce!!! Para acessar a sua conta utilize essas credenciais: [Usuario = "ADM"], [Senha = "${passwordTemp}"], [Empresa = "${nome}"]. Lembre-se de alterar sua senha apos o primeiro login. Boas Vendas`;
 
