@@ -6,18 +6,26 @@ const s3 = new aws.S3();
 
 const Product = require("../models/Produto");
 const Company = require("../models/Empresa");
+const Section = require("../models/Section");
 
 module.exports = {
   //### Cadastra um novo produto
   async create(req, res) {
     try {
       const _id = req.userPayload.empresa;
+      const { secao } = req.body;
+
+      const section = await Section.findOne({ name: secao });
+
+      if (!section)
+        return res.status(404).send({ error: "Seção não encontrada" });
 
       if (!(await Company.findById(_id)))
         return res.status(404).send({ error: "Empresa não encontrada" });
 
       const product = await Product.create({
         ...req.body,
+        secao: section._id,
         imagem: req.file ? req.file.key : "",
         imagemURL: req.file ? req.file.location : "",
         id_empresa: _id,
@@ -32,9 +40,14 @@ module.exports = {
   //### Lista todos os produtos de uma empresa
   async list(req, res) {
     try {
+      const { page = 1 } = req.query;
+
       const products = await Product.find({
         id_empresa: req.params.companyId,
-      });
+      })
+        .limit(5)
+        .skip((page - 1) * 5)
+        .populate("secao");
 
       const count = products.length;
 
@@ -50,7 +63,9 @@ module.exports = {
   //### Exibe um produto específico de um empresa
   async show(req, res) {
     try {
-      const product = await Product.findById(req.params.productId);
+      const product = await Product.findById(req.params.productId).populate(
+        "secao"
+      );
 
       if (!product)
         return res.status(404).send({ error: "Produto não encontrado" });
