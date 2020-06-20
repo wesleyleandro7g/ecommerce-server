@@ -3,11 +3,24 @@ const db = require("../database");
 const ProdutoSchema = new db.Schema({
   nome: {
     type: String,
+    required: true,
+  },
+  descricao: {
+    type: String,
     required: false,
+  },
+  secao: {
+    type: db.Schema.Types.ObjectId,
+    ref: "Section",
+    required: true,
+  },
+  unidade: {
+    type: String,
+    required: true,
   },
   preco: {
     type: db.Schema.Types.Number,
-    required: false,
+    required: true,
   },
   preco_promocional: {
     type: String,
