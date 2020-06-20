@@ -6,18 +6,26 @@ const s3 = new aws.S3();
 
 const Product = require("../models/Produto");
 const Company = require("../models/Empresa");
+const Section = require("../models/Section");
 
 module.exports = {
   //### Cadastra um novo produto
   async create(req, res) {
     try {
       const _id = req.userPayload.empresa;
+      const { secao } = req.body;
+
+      const section = await Section.findOne({ name: secao });
+
+      if (!section)
+        return res.status(404).send({ error: "Seção não encontrada" });
 
       if (!(await Company.findById(_id)))
         return res.status(404).send({ error: "Empresa não encontrada" });
 
       const product = await Product.create({
         ...req.body,
+        secao: section._id,
         imagem: req.file ? req.file.key : "",
         imagemURL: req.file ? req.file.location : "",
         id_empresa: _id,
@@ -34,7 +42,7 @@ module.exports = {
     try {
       const products = await Product.find({
         id_empresa: req.params.companyId,
-      });
+      }).populate("secao");
 
       const count = products.length;
 
